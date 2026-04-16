@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Product {
+  id                         Int      @id @default(autoincrement())
+  externalId                 String   @unique
+  name                       String
+  brand                      String?
+  store                      String?
+  category                   String?
+  imageUrl                   String?
+  priceNok                   Float
+  kcalPer100g                Float
+  proteinPer100g             Float
+  proteinPerKrone            Float
+  proteinPerCalorie          Float
+  proteinPerCaloriePerKrone  Float
+  lastSeenAt                 DateTime @default(now())
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
+}
+
+model SyncRun {
+  id               Int      @id @default(autoincrement())
+  status           String
+  startedAt        DateTime @default(now())
+  finishedAt       DateTime?
+  pagesFetched     Int      @default(0)
+  productsReceived Int      @default(0)
+  productsSaved    Int      @default(0)
+  errorMessage     String?
+}

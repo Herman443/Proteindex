@@ -6,7 +6,7 @@ Proteindex er en Next.js-app som rangerer dagligvarer i Norge etter:
 - protein per kalori
 - protein per kalori per krone
 
-Datakilden er Kassalapp API (`kassal.app/api`). Planen er å hente alle produkter daglig, lagre dem i egen database og bygge rangeringer fra den normaliserte datastrukturen.
+Datakilden er Kassalapp API (`kassal.app/api`).
 
 ## 1. Lokal oppstart
 
@@ -14,6 +14,13 @@ Installer avhengigheter:
 
 ```bash
 npm install
+```
+
+Initialiser lokal database og Prisma-klient:
+
+```bash
+npm run db:push
+npm run db:generate
 ```
 
 Lag lokal miljøfil:
@@ -65,7 +72,33 @@ git push -u origin main
 
 ## 5. Neste steg
 
-- sette opp database (PostgreSQL + Prisma)
-- lage sync-jobb med robust paginering og retry
-- lage API-ruter for topplister
-- bygge frontend med tre sorterte lister
+## 6. MVP som er implementert
+
+- SQLite + Prisma for lagring av produkter og sync-historikk
+- sync-script som henter side for side fra Kassalapp (`size=100`, `page=1..N`)
+- rate limit-hensyn med minst 1 sekund mellom requests
+- ranking-felter lagres i databasen:
+	- protein per krone
+	- protein per kalori
+	- protein per kalori per krone
+- frontend som viser tre topplister
+
+## 7. Nyttige kommandoer
+
+Kjor datasync manuelt:
+
+```bash
+npm run sync
+```
+
+Bygg API-toppliste (eksempel):
+
+```txt
+GET /api/rankings?metric=proteinPerKrone&limit=20
+```
+
+Manuell sync via API:
+
+```txt
+POST /api/sync
+```
